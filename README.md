@@ -1,5 +1,9 @@
-### Reference
+# graphql-db-playground
 
-https://github.com/alexisrolland/docker-postgresql-postgraphile/
-https://github.com/graphile/postgraphile/blob/master/examples/forum/
-https://github.com/graphile/examples
+> Comparing few graph/graphql-friendly databases for quick backend dev.
+
+Started as dillema & reddit post.
+
+https://www.reddit.com/r/graphql/comments/dihrqc/need_some_help_choosing_graph_db/
+
+The goal is to compare subjective ease of GraphQL API development with Postgraphile, Dgraph & Neo4j.
