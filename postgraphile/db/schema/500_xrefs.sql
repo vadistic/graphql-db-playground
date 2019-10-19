@@ -1,58 +1,65 @@
 -- XREFS
 
--- DROP TABLE IF EXISTS app_public.time_entry_tag_xref;
--- DROP TABLE IF EXISTS app_public.account_workspace_tag_xref;
+-- drop table if exists app_public.time_entry_tag_xref;
+-- drop table if exists app_public.account_workspace_xref;
+-- drop table if exists app_public.account_project_xref;
 
 -- TIME_ENTRY <> TAG
 
-CREATE TABLE app_public.time_entry_tag_xref (
-    time_entry_id   uuid            CONSTRAINT time_entry_id_fkey REFERENCES app_public.time_entry(id) ON DELETE SET NULL,
-    tag_id          uuid            CONSTRAINT tag_id_fkey        REFERENCES app_public.tag(id)        ON DELETE SET NULL,
+create table app_public.time_entry_tag_xref (
+    time_entry_id   uuid            constraint time_entry_id_fkey references app_public.time_entry(id) on delete set null,
+    tag_id          uuid            constraint tag_id_fkey        references app_public.tag(id)        on delete set null,
 
-    PRIMARY KEY (time_entry_id, tag_id)
+    primary key (time_entry_id, tag_id)
 );
 
-COMMENT ON TABLE app_public.time_entry_tag_xref IS
-    e'Time entry & Tag association';
+comment on table app_public.time_entry_tag_xref is
+    e'@omit all,many\nTime entry & Tag association';
 
-COMMENT ON CONSTRAINT time_entry_id_fkey ON app_public.time_entry_tag_xref IS
+comment on constraint time_entry_id_fkey on app_public.time_entry_tag_xref is
     e'@manyToManyFieldName timeEntries\n@manyToManySimpleFieldName timeEntriesList';
 
-COMMENT ON CONSTRAINT tag_id_fkey ON app_public.time_entry_tag_xref IS
+comment on constraint tag_id_fkey on app_public.time_entry_tag_xref is
     e'@manyToManyFieldName tags\n@manyToManySimpleFieldName tagsList';
+
+grant select, insert, update, delete on table app_public.time_entry_tag_xref to app_authenticated;
 
 -- ACCOUNT <> WORKSPACE
 
-CREATE TABLE app_public.account_workspace_xref (
-    account_id      uuid            CONSTRAINT account_id_fkey    REFERENCES app_public.account(id)    ON DELETE SET NULL,
-    workspace_id    uuid            CONSTRAINT workspace_id_fkey  REFERENCES app_public.workspace(id)  ON DELETE SET NULL,
+create table app_public.account_workspace_xref (
+    account_id      uuid            constraint account_id_fkey    references app_public.account(id)    on delete set null,
+    workspace_id    uuid            constraint workspace_id_fkey  references app_public.workspace(id)  on delete set null,
 
-    PRIMARY KEY (account_id, workspace_id)
+    primary key (account_id, workspace_id)
 );
 
-COMMENT ON TABLE app_public.account_workspace_xref IS
-    e'Account & Workspace association';
+comment on table app_public.account_workspace_xref is
+    e'@omit all,many\nAccount & Workspace association';
 
-COMMENT ON CONSTRAINT account_id_fkey ON app_public.account_workspace_xref IS
+comment on constraint account_id_fkey on app_public.account_workspace_xref is
     e'@manyToManyFieldName accounts\n@manyToManySimpleFieldName accountsList';
 
-COMMENT ON CONSTRAINT workspace_id_fkey ON app_public.account_workspace_xref IS
+comment on constraint workspace_id_fkey on app_public.account_workspace_xref is
     e'@manyToManyFieldName workspaces\n@manyToManySimpleFieldName workspacesList';
+
+grant select, insert, update, delete  on table app_public.account_workspace_xref to app_authenticated;
 
 -- ACCOUNT <> PROJECT
 
-CREATE TABLE app_public.account_project_xref (
-    account_id      uuid        CONSTRAINT account_id_fkey    REFERENCES app_public.account    ON DELETE SET NULL,
-    project_id      uuid        CONSTRAINT project_id_fkey    REFERENCES app_public.project    ON DELETE SET NULL,
+create table app_public.account_project_xref (
+    account_id      uuid        constraint account_id_fkey    references app_public.account    on delete set null,
+    project_id      uuid        constraint project_id_fkey    references app_public.project    on delete set null,
 
-    PRIMARY KEY (account_id, project_id)
+    primary key (account_id, project_id)
 );
 
-COMMENT ON TABLE app_public.account_project_xref IS
-    e'Account & Project association';
+comment on table app_public.account_project_xref is
+    e'@omit all,many\nAccount & Project association';
 
-COMMENT ON CONSTRAINT account_id_fkey ON app_public.account_project_xref IS
+comment on constraint account_id_fkey on app_public.account_project_xref is
     e'@manyToManyFieldName accounts\n@manyToManySimpleFieldName accountsList';
 
-COMMENT ON CONSTRAINT project_id_fkey ON app_public.account_project_xref IS
+comment on constraint project_id_fkey on app_public.account_project_xref is
     e'@manyToManyFieldName projects\n@manyToManySimpleFieldName projectsList';
+
+grant select, insert, update, delete  on table app_public.account_project_xref to app_authenticated;

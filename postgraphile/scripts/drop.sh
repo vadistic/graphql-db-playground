@@ -2,7 +2,7 @@
 
 source ./.env.local
 
-psql $DATABASE_URL -b -c "
+psql $DATABASE_ADMIN_URL -b -c "
 BEGIN;
 
 DROP SCHEMA IF EXISTS app_private CASCADE;
@@ -13,4 +13,3 @@ COMMIT;
 
 
 echo 'Database dropped!'
-

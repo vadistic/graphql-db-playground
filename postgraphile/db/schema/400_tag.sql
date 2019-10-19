@@ -1,45 +1,51 @@
 -- TAG
 
--- DROP TABLE IF EXISTS app_public.tag CASCADE;
--- DROP TRIGGER IF EXISTS timestamps ON app_public.tag;
+-- drop table if exists app_public.tag cascade;
+-- drop trigger if exists timestamps on app_public.tag;
 
 --
 
-CREATE TABLE app_public.tag (
+create table app_public.tag (
     -- system
-    id              uuid            PRIMARY KEY DEFAULT uuid_generate_v1mc (),
-    created_at      TIMESTAMP       NOT NULL DEFAULT now(),
-    updated_at      TIMESTAMP       NOT NULL DEFAULT now(),
+    id              uuid            primary key default uuid_generate_v1mc (),
+    created_at      timestamp       not null default now(),
+    updated_at      timestamp       not null default now(),
 
     -- scalar
-    name            text            NOT NULL CHECK (is_short_text(name)),
+    name            text            not null check (is_short_text(name)),
     description     text
     -- refs
 );
 
 --
 
-COMMENT ON TABLE app_public.tag IS
+comment on table app_public.tag is
     e'A tag';
 
 -- system
-COMMENT ON COLUMN app_public.tag.id IS
+comment on column app_public.tag.id is
     e'A tag’s id';
-COMMENT ON COLUMN app_public.tag.created_at IS
+comment on column app_public.tag.created_at is
     e'A tag’s create timestamp';
-COMMENT ON COLUMN app_public.tag.updated_at IS
+comment on column app_public.tag.updated_at is
     e'A tag’s update timestamp';
 
 -- scalar
-COMMENT ON COLUMN app_public.tag.name IS
+comment on column app_public.tag.name is
     e'A tag’s name';
-COMMENT ON COLUMN app_public.tag.description IS
+comment on column app_public.tag.description is
     e'A tag’s description';
 
 --
 
-CREATE TRIGGER timestamps
-    BEFORE INSERT
-    OR UPDATE ON app_public.tag
-    FOR EACH ROW
-    EXECUTE PROCEDURE app_private.tg__update_timestamps ();
+grant select, update, delete on table app_public.tag to app_authenticated;
+
+--
+
+create trigger timestamps
+    before insert
+    or update on app_public.tag
+    for each row
+    execute procedure app_private.tg__update_timestamps ();
+
+--

@@ -2,78 +2,92 @@
 
 -- cleanup
 
--- DROP TABLE IF EXISTS app_public.time_entry CASCADE;
--- DROP TRIGGER IF EXISTS timestamps ON app_public.time_entry;
+-- drop table if exists app_public.time_entry cascade;
+-- drop trigger if exists timestamps on app_public.time_entry;
 
 --
 
-CREATE TABLE app_public.time_entry (
+create table app_public.time_entry (
     -- system
-    id              uuid            PRIMARY KEY DEFAULT uuid_generate_v1mc (),
-    created_at      TIMESTAMP       NOT NULL DEFAULT now(),
-    updated_at      TIMESTAMP       NOT NULL DEFAULT now(),
+    id              uuid            primary key default uuid_generate_v1mc (),
+    created_at      timestamp       not null default now(),
+    updated_at      timestamp       not null default now(),
 
     -- scalar
-    name            text            CHECK (is_medium_text(name)),
+    name            text            check (is_medium_text(name)),
     description     text,
-    started_at      TIMESTAMP,
-    ended_at        TIMESTAMP,
+    started_at      timestamp,
+    ended_at        timestamp,
 
     -- refs
-    account_id      uuid            NOT NULL
-                                    REFERENCES app_public.account
-                                    ON DELETE SET NULL,
+    account_id      uuid            not null
+                                    constraint time_entry_account_id_fkey
+                                    references app_public.account
+                                    on delete set null,
 
-    project_id      uuid            REFERENCES app_public.project
-                                    ON DELETE SET NULL,
+    project_id      uuid            constraint time_entry_project_id_fkey
+                                    references app_public.project
+                                    on delete set null,
 
-    client_id       uuid            REFERENCES app_public.client
-                                    ON DELETE SET NULL
+    client_id       uuid            constraint time_entry_client_id_fkey
+                                    references app_public.client
+                                    on delete set null
 );
 
 --
 
-CREATE INDEX time_entry_account_id_fkey ON app_public.time_entry(account_id);
-CREATE INDEX time_entry_project_id_fkey ON app_public.time_entry(project_id);
-CREATE INDEX time_entry_client_id_fkey ON app_public.time_entry(client_id);
+create index time_entry_account_id_idx on app_public.time_entry(account_id);
+create index time_entry_project_id_idx on app_public.time_entry(project_id);
+create index time_entry_client_id_idx on app_public.time_entry(client_id);
 
 --
 
-COMMENT ON TABLE app_public.time_entry IS
+comment on table app_public.time_entry is
     e'A time entry';
 
 -- system
-COMMENT ON COLUMN app_public.time_entry.id IS
+comment on column app_public.time_entry.id is
     e'A time entry’s id';
-COMMENT ON COLUMN app_public.time_entry.created_at IS
+comment on column app_public.time_entry.created_at is
     e'A time entry’s create timestamp';
-COMMENT ON COLUMN app_public.time_entry.updated_at IS
+comment on column app_public.time_entry.updated_at is
     e'A time entry’s update timestamp';
 
 -- scalar
-COMMENT ON COLUMN app_public.time_entry.name IS
+comment on column app_public.time_entry.name is
     e'A time entry’s name';
-COMMENT ON COLUMN app_public.time_entry.description IS
+comment on column app_public.time_entry.description is
     e'A time entry’s description';
-COMMENT ON COLUMN app_public.time_entry.started_at IS
+comment on column app_public.time_entry.started_at is
     e'A time entry’s start timestamp';
-COMMENT ON COLUMN app_public.time_entry.ended_at IS
+comment on column app_public.time_entry.ended_at is
     e'A time entry’s end timestamp';
 
 -- refs
-COMMENT ON COLUMN app_public.time_entry.account_id IS
+comment on column app_public.time_entry.account_id is
     e'A time entry’s author reference';
-COMMENT ON COLUMN app_public.time_entry.project_id IS
+comment on column app_public.time_entry.project_id is
     e'A time entry’s project reference';
-COMMENT ON COLUMN app_public.time_entry.client_id IS
+comment on column app_public.time_entry.client_id is
     e'A time entry’s client reference';
+
+comment on constraint time_entry_account_id_fkey on app_public.time_entry is
+    e'@omit manyToMany';
+comment on constraint time_entry_project_id_fkey on app_public.time_entry is
+    e'@omit manyToMany';
+comment on constraint time_entry_client_id_fkey on app_public.time_entry is
+    e'@omit manyToMany';
 
 --
 
-CREATE TRIGGER timestamps
-    BEFORE INSERT OR UPDATE
-    ON app_public.time_entry
-    FOR EACH ROW EXECUTE PROCEDURE
+grant select, insert, update, delete on table app_public.time_entry to app_authenticated;
+
+--
+
+create trigger timestamps
+    before insert or update
+    on app_public.time_entry
+    for each row execute procedure
     app_private.tg__update_timestamps ();
 
 --

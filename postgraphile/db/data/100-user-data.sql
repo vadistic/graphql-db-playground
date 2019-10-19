@@ -1,28 +1,28 @@
-CREATE OR REPLACE FUNCTION temp__get_account_id (skip int)
-    RETURNS uuid AS $$
+create or replace function temp__get_account_id (skip int)
+    returns uuid as $$
         SELECT (id)
             FROM app_public.account
             OFFSET skip
             LIMIT 1;
-    $$ LANGUAGE SQL STABLE;
+    $$ language sql stable;
 
-CREATE OR REPLACE FUNCTION temp__hash_password (password text)
-    RETURNS text AS $$
+create or replace function temp__hash_password (password text)
+    returns text as $$
     BEGIN
         RETURN crypt(password, gen_salt('bf'));
     END
-    $$ LANGUAGE PLPGSQL IMMUTABLE;
+    $$ language plpgsql immutable;
 
 
-INSERT INTO app_public.account
-    (first_name,                    last_name,      description           )
-    VALUES
-    ('Jakub',                       'Wadas',        'My description'      ),
-    ('Adam',                        'Kowalski',     'My other description');
+insert into app_public.account
+    (first_name,                    last_name,        email,                description,              timezone      )
+    values
+    ('Jakub',                       'Wadas',         'vadistic@gmail.com',  'My description',         'Europe/Warsaw'),
+    ('Adam',                        'Kowalski',      'adam@gmail.com',      'My other description',   'Europe/Warsaw');
 
 
-INSERT INTO app_private.account
-    (account_id,                    email,                  password_hash,                           timezone)
-    VALUES
-    (temp__get_account_id (0),      'vadistic@gmail.com',   temp__hash_password('password'),        'Europe/Warsaw'),
-    (temp__get_account_id (1),      'adam@gmail.com',       temp__hash_password('password123'),     'Europe/Warsaw');
+insert into app_private.account
+    (account_id,                    password_hash                           )
+    values
+    (temp__get_account_id (0),      temp__hash_password('password')         ),
+    (temp__get_account_id (1),      temp__hash_password('password123')      );

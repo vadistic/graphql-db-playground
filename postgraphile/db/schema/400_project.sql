@@ -2,58 +2,66 @@
 
 -- cleanup
 
--- DROP TABLE IF EXISTS app_public.project CASCADE;
--- DROP TRIGGER IF EXISTS timestamps ON app_public.project;
--- DROP INDEX IF EXISTS project_client_id_fkey_idx;
+-- drop table if exists app_public.project cascade;
+-- drop trigger if exists timestamps on app_public.project;
+-- drop index if exists project_client_id_fkey_idx;
 
 --
 
-CREATE TABLE app_public.project (
+create table app_public.project (
     -- system
-    id              uuid            PRIMARY KEY DEFAULT uuid_generate_v1mc (),
-    created_at      TIMESTAMP       NOT NULL DEFAULT now(),
-    updated_at      TIMESTAMP       NOT NULL DEFAULT now(),
+    id              uuid            primary key default uuid_generate_v1mc (),
+    created_at      timestamp       not null default now(),
+    updated_at      timestamp       not null default now(),
 
     -- scalar
-    name            text            NOT NULL CHECK (is_short_text(name)),
+    name            text            not null check (is_short_text(name)),
     description     text,
 
     -- refs
-    client_id       uuid            REFERENCES app_public.client(id)
-                                    ON DELETE SET NULL
+    client_id       uuid            constraint project_client_id_fkey
+                                    references app_public.client(id)
+                                    on delete set null
 );
 
 --
 
-CREATE INDEX project_client_id_fkey ON app_public.project(client_id);
+create index project_client_id_fkey on app_public.project(client_id);
 
 --
 
-COMMENT ON TABLE app_public.project IS
+comment on table app_public.project is
     e'A Project';
 
 -- system
-COMMENT ON COLUMN app_public.project.id IS
+comment on column app_public.project.id is
     e'A projects’s id';
-COMMENT ON COLUMN app_public.project.created_at IS
+comment on column app_public.project.created_at is
     e'A projects’s create timestamp';
-COMMENT ON COLUMN app_public.project.updated_at IS
+comment on column app_public.project.updated_at is
     e'A projects’s update timestamp';
 
 -- scalar
-COMMENT ON COLUMN app_public.project.name IS
+comment on column app_public.project.name is
     e'A projects’s name';
-COMMENT ON COLUMN app_public.project.description IS
+comment on column app_public.project.description is
     e'A projects’s description';
 
 -- refs
-COMMENT ON COLUMN app_public.project.description IS
+comment on column app_public.project.description is
     e'A projects’s description';
+
+comment on constraint project_client_id_fkey on app_public.project is
+    e'@omit manytoMany';
 
 --
 
-CREATE TRIGGER timestamps
-    BEFORE INSERT OR UPDATE
-    ON app_public.project
-    FOR EACH ROW EXECUTE PROCEDURE
+create trigger timestamps
+    before insert or update
+    on app_public.project
+    for each row execute procedure
     app_private.tg__update_timestamps ();
+
+--
+
+grant select, insert, update, delete on table app_public.project to app_authenticated;

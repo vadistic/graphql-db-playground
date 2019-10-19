@@ -22,7 +22,7 @@ if (process.env.IS_LOCAL) {
 const app = express()
 
 const main = postgraphile(
-  process.env.DATABASE_URL,
+  process.env.DATABASE_SERVER_URL,
   process.env.DATABASE_SCHEMA!.split(','),
   {
     appendPlugins: [PgManyToManyPlugin, PgSimplifyInflectorPlugin],
@@ -33,6 +33,8 @@ const main = postgraphile(
     jwtPgTypeIdentifier: 'app_public.jwt_token',
     jwtSecret: process.env.JWT_SECRET,
     ignoreRBAC: false,
+    ownerConnectionString: process.env.DATABASE_ADMIN_URL,
+    pgDefaultRole: 'app_anonymous',
 
     graphileBuildOptions: {
       pgSimplifyPatch: false,
