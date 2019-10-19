@@ -1,47 +1,70 @@
+-- ACCOUNT
+
+-- DROP TABLE IF EXISTS app_public.account CASCADE;
+-- DROP TABLE IF EXISTS app_private.account CASCADE;
+
+-- DROP TRIGGER IF EXISTS timestamps ON app_public.account;
+-- DROP FUNCTION IF EXISTS app_public.account_full_name;
+
+--
+
 CREATE TABLE app_public.account (
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
-    created_at timestamp DEFAULT now(),
-    updated_at timestamp DEFAULT now(),
-    --
-    email text NOT NULL UNIQUE,
-    first_name text NOT NULL CHECK (char_length(first_name) < 80),
-    last_name text CHECK (char_length(last_name) < 80),
-    description text
+    -- system
+    id              uuid            PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+    created_at      TIMESTAMP       NOT NULL DEFAULT now(),
+    updated_at      TIMESTAMP       NOT NULL DEFAULT now(),
+
+    -- scalar
+    first_name      text            CHECK (is_short_text(first_name)),
+    last_name       text            CHECK (is_short_text(first_name)),
+    description     text
 );
 
 --
-COMMENT ON TABLE app_public.account IS E'A account';
 
-COMMENT ON COLUMN app_public.account.id IS E'A account’s id';
+COMMENT ON TABLE app_public.account IS
+    e'A account';
 
-COMMENT ON COLUMN app_public.account.created_at IS E'A account’s create timestamp';
+-- system
+COMMENT ON COLUMN app_public.account.id IS
+    e'An account’s id';
+COMMENT ON COLUMN app_public.account.created_at IS
+    e'An account’s create timestamp';
+COMMENT ON COLUMN app_public.account.updated_at IS
+    e'An account’s update timestamp';
 
-COMMENT ON COLUMN app_public.account.updated_at IS E'A account’s update timestamp';
-
-COMMENT ON COLUMN app_public.account.email IS E'A account’s email';
-
-COMMENT ON COLUMN app_public.account.first_name IS E'A account’s first name';
-
-COMMENT ON COLUMN app_public.account.last_name IS E'A account’s last name';
-
-COMMENT ON COLUMN app_public.account.description IS E'A account’s description';
-
---
-CREATE TRIGGER timestamps
-    BEFORE INSERT
-    OR UPDATE ON app_public.account
-    FOR EACH ROW
-    EXECUTE PROCEDURE app_private.tg__update_timestamps ();
+-- scalar
+COMMENT ON COLUMN app_public.account.first_name IS
+    e'An account’s first name';
+COMMENT ON COLUMN app_public.account.last_name IS
+    e'An account’s last name';
+COMMENT ON COLUMN app_public.account.description IS
+    e'An account’s description';
 
 --
+
 CREATE FUNCTION app_public.account_full_name (account app_public.account)
-    RETURNS text
-    AS $$
+    RETURNS text AS $$
     SELECT
         account.first_name || ' ' || account.last_name
-$$
-LANGUAGE sql
-STABLE;
+    $$ LANGUAGE SQL STABLE;
 
-COMMENT ON FUNCTION app_public.account_full_name (app_public.account) IS E'A accounts’s full name';
+COMMENT ON FUNCTION app_public.account_full_name (app_public.account) IS
+    e'An accounts’s full name';
 
+--
+
+CREATE TRIGGER timestamps
+    BEFORE INSERT OR UPDATE
+    ON app_public.account
+    FOR EACH ROW EXECUTE PROCEDURE
+    app_private.tg__update_timestamps ();
+
+--
+
+CREATE TABLE app_private.account (
+  account_id        uuid            PRIMARY KEY REFERENCES app_public.account(id) ON DELETE CASCADE,
+  email             text            NOT NULL UNIQUE CHECK (email ~* '^.+@.+\..+$'),
+  password_hash     text            NOT NULL,
+  timezone          text            NOT NULL CHECK (is_timezone_name(timezone)) DEFAULT 'Europe/Warsaw'
+);

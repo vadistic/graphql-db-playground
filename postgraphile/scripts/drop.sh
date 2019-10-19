@@ -9,7 +9,7 @@ DROP SCHEMA IF EXISTS app_private CASCADE;
 DROP SCHEMA IF EXISTS app_public CASCADE;
 DROP SCHEMA IF EXISTS public CASCADE;
 COMMIT;
-"
+" &> /dev/null
 
 
 echo 'Database dropped!'

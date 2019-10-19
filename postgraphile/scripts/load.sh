@@ -2,19 +2,12 @@
 
 source ./.env.local
 
-psql $DATABASE_URL -b -c "
-BEGIN;
-  $(cat ./db/schema/*.sql)
-COMMIT;
-"
+# separate for sane error logging
+find ./db/schema -name '*.sql' | sort | xargs -I _ sh -c "psql $DATABASE_URL -b -q -f _ && echo 'OK: _'"
 
 echo 'Database uploaded!'
 
-psql $DATABASE_URL -b -c "
-BEGIN;
-  $(cat ./db/data/*.sql)
-COMMIT;
-"
+find ./db/data -name '*.sql' | sort | xargs -I _ psql $DATABASE_URL -b -q -f _
 
 echo 'Database seeded!'
 

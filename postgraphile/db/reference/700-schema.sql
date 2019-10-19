@@ -257,13 +257,14 @@ $$
 LANGUAGE plpgsql
 STRICT
 SECURITY DEFINER;
+
 GRANT usage ON SCHEMA forum_public TO forum_public_anonymous, forum_public_person;
 GRANT SELECT ON TABLE forum_public.person TO forum_public_anonymous, forum_public_person;
 GRANT UPDATE, DELETE ON TABLE forum_public.person TO forum_public_person;
 GRANT SELECT ON TABLE forum_public.post TO forum_public_anonymous, forum_public_person;
 GRANT INSERT, UPDATE, DELETE ON TABLE forum_public.post TO forum_public_person;
-GRANT usage ON SEQUENCE forum_public.post_id_seq
-    TO forum_public_person;
+GRANT usage ON SEQUENCE forum_public.post_id_seq TO forum_public_person;
+
 GRANT EXECUTE ON FUNCTION forum_public.person_full_name (forum_public.person) TO forum_public_anonymous, forum_public_person;
 GRANT EXECUTE ON FUNCTION forum_public.post_summary (forum_public.post, integer, text) TO forum_public_anonymous, forum_public_person;
 GRANT EXECUTE ON FUNCTION forum_public.person_latest_post (forum_public.person) TO forum_public_anonymous, forum_public_person;
@@ -272,8 +273,10 @@ GRANT EXECUTE ON FUNCTION forum_public.authenticate (text, text) TO forum_public
 GRANT EXECUTE ON FUNCTION forum_public.current_person () TO forum_public_anonymous, forum_public_person;
 GRANT EXECUTE ON FUNCTION forum_public.change_password (text, text) TO forum_public_person;
 GRANT EXECUTE ON FUNCTION forum_public.register_person (text, text, text, text) TO forum_public_anonymous;
+
 ALTER TABLE forum_public.person enable ROW level SECURITY;
 ALTER TABLE forum_public.post enable ROW level SECURITY;
+
 CREATE POLICY select_person ON forum_public.person FOR SELECT USING (TRUE);
 CREATE POLICY select_post ON forum_public.post FOR SELECT USING (TRUE);
 CREATE POLICY update_person ON forum_public.person FOR UPDATE TO forum_public_person USING (id = current_setting('jwt.claims.person_id', TRUE)::integer);
@@ -281,5 +284,6 @@ CREATE POLICY delete_person ON forum_public.person FOR DELETE TO forum_public_pe
 CREATE POLICY insert_post ON forum_public.post FOR INSERT TO forum_public_person WITH CHECK (author_id = current_setting('jwt.claims.person_id', TRUE)::integer);
 CREATE POLICY update_post ON forum_public.post FOR UPDATE TO forum_public_person USING (author_id = current_setting('jwt.claims.person_id', TRUE)::integer);
 CREATE POLICY delete_post ON forum_public.post FOR DELETE TO forum_public_person USING (author_id = current_setting('jwt.claims.person_id', TRUE)::integer);
+
 COMMIT;
 

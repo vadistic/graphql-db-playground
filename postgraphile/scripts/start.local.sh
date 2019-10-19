@@ -13,4 +13,5 @@ yarn postgraphile \
       --graphql /graphql \
       --graphiql /graphiql \
       --enhance-graphiql \
+      --simple-collections only \
       --watch
