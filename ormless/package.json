@@ -32,13 +32,16 @@
     "test:watch": "jest --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
+  "dependencies": {
+    "apollo-server-express": "^2.9.7",
+    "express": "^4.17.1",
+    "graphql": "^14.5.8",
+    "pg": "^7.12.1"
+  },
   "devDependencies": {
     "@types/pg": "^7.11.2"
   },
   "engines": {
     "node": ">= 10.x"
-  },
-  "dependencies": {
-    "pg": "^7.12.1"
   }
 }

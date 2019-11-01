@@ -1,25 +1,60 @@
 version: '3.7'
 
 services:
-  db:
-    container_name: db
+  postgres:
+    container_name: postgres
+    image: postgres:latest
     restart: unless-stopped
-    build:
-      context: ./db
     ports:
       - "5432:5432"
     volumes:
-      - data:/var/lib/postgresql/data
+      - /tmp/postgres:/var/lib/postgresql/data
+      - ./scripts/postgres:/docker-entrypoint-initdb.d
     networks:
       - backend
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: admin
+      POSTGRES_MULTIPLE_DATABASES: typeorm,ormless,prisma
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+
+  dgraph:
+    container_name: dgraph
+    image: dgraph/standalone:graphql
+    restart: unless-stopped
+    volumes:
+      - /tmp/dgraph:/dgraph
+    networks:
+      - backend
+    ports:
+      # zero http+grpc
+      - 5080:5080
+      - 6080:6080
+      # alpha http+grpc
+      - 8080:8080
+      - 9080:9080
+      # ratel
+      - 8000:8000
+      # graphql
+      - 9000:9000
+
+  neo4j:
+    container_name: neo4j
+    image: neo4j:latest
+    restart: unless-stopped
+    volumes:
+      - /tmp/neo4j:/data
+    networks:
+      - backend
+    ports:
+      # http
+      - 7474:7474
+      # https
+      - 7473:7473
+      # bolt
+      - 7687:7687
+    environment:
+     NEO4J_AUTH: none
 
 networks:
   backend:
     name: backend
-
-volumes:
-  data:

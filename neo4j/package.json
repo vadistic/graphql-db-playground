@@ -1,5 +1,5 @@
 {
-  "name": "@playground/typeorm",
+  "name": "@playground/neo4j",
   "version": "0.1.7",
   "private": true,
   "description": "Comparing few graphql server/db solutions",
@@ -32,16 +32,13 @@
     "test:watch": "jest --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
+  "engines": {
+    "node": ">= 10.x"
+  },
   "dependencies": {
     "apollo-server-express": "^2.9.7",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
-    "typeorm": "^0.2.20"
-  },
-  "devDependencies": {
-    "typescript": "3.7.1-rc"
-  },
-  "engines": {
-    "node": ">= 10.x"
+    "neo4j-graphql-js": "^2.8.0"
   }
 }

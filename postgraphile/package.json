@@ -19,9 +19,9 @@
   "license": "MIT",
   "author": "Jakub Wadas <vadistic@gmail.com>",
   "scripts": {
-    "dev": "ts-node server/main.ts",
     "build": "tsc -b -v tsconfig.build.json",
     "clean": "rm -rf dist",
+    "dev": "ts-node server/main.ts",
     "format": "prettier --write 'src/**/*.{ts,tsx}'",
     "lint": "eslint '*/**/*.{ts,tsx}'",
     "lint:fix": "eslint '*/**/*.{ts,tsx}' --fix",
@@ -34,8 +34,10 @@
   "dependencies": {
     "@graphile-contrib/pg-many-to-many": "1.0.0-beta.12",
     "@graphile-contrib/pg-simplify-inflector": "5.0.0-beta.1",
+    "apollo-server-express": "^2.9.7",
     "dotenv": "8.2.0",
     "express": "4.17.1",
+    "graphql": "^14.5.8",
     "postgraphile": "4.4.4"
   },
   "devDependencies": {

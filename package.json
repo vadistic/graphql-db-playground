@@ -27,6 +27,8 @@
     "typeorm"
   ],
   "devDependencies": {
+    "@types/jest": "^24.0.21",
+    "@types/node": "^12.12.3",
     "@vadistic/eslint-config-node": "0.1.7",
     "@vadistic/prettier-config": "0.1.7",
     "@vadistic/scripts": "0.1.7",
