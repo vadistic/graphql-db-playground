@@ -1,6 +1,6 @@
 {
-  "name": "@playground/postgraphile",
-  "version": "0.1.0",
+  "name": "@playground/faunadb",
+  "version": "0.1.7",
   "private": true,
   "description": "Comparing few graphql server/db solutions",
   "keywords": [
@@ -18,8 +18,9 @@
   },
   "license": "MIT",
   "author": "Jakub Wadas <vadistic@gmail.com>",
+  "module": "dist/main.js",
+  "source": "scr/main.ts",
   "scripts": {
-    "dev": "ts-node server/main.ts",
     "build": "tsc -b -v tsconfig.build.json",
     "clean": "rm -rf dist",
     "format": "prettier --write 'src/**/*.{ts,tsx}'",
@@ -31,22 +32,8 @@
     "test:watch": "jest --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
-  "dependencies": {
-    "@graphile-contrib/pg-many-to-many": "1.0.0-beta.12",
-    "@graphile-contrib/pg-simplify-inflector": "5.0.0-beta.1",
-    "dotenv": "8.2.0",
-    "express": "4.17.1",
-    "postgraphile": "4.4.4"
-  },
   "devDependencies": {
-    "@types/dotenv": "6.1.1",
-    "@types/express": "4.17.1",
-    "@types/faker": "4.1.6",
-    "@types/node": "12.11.1",
-    "@types/pg": "7.11.2",
-    "faker": "4.1.0",
-    "knex": "0.19.5",
-    "pg": "7.12.1"
+    "typescript": "3.7.1-rc"
   },
   "engines": {
     "node": ">= 10.x"

@@ -1,5 +1,5 @@
 {
-  "name": "@playground/postgraphile",
+  "name": "@playground/dgraph",
   "version": "0.1.0",
   "private": true,
   "description": "Comparing few graphql server/db solutions",
@@ -12,14 +12,10 @@
     "typeorm"
   ],
   "homepage": "https://vadistic.netlify.com",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vadistic/graphql-db-playground"
-  },
+  "repository": "",
   "license": "MIT",
   "author": "Jakub Wadas <vadistic@gmail.com>",
   "scripts": {
-    "dev": "ts-node server/main.ts",
     "build": "tsc -b -v tsconfig.build.json",
     "clean": "rm -rf dist",
     "format": "prettier --write 'src/**/*.{ts,tsx}'",
@@ -32,21 +28,29 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@graphile-contrib/pg-many-to-many": "1.0.0-beta.12",
-    "@graphile-contrib/pg-simplify-inflector": "5.0.0-beta.1",
+    "apollo-server-express": "2.9.7",
+    "dgraph-js": "2.0.2",
     "dotenv": "8.2.0",
     "express": "4.17.1",
-    "postgraphile": "4.4.4"
+    "graphql": "14.5.8",
+    "grpc": "1.24.0"
   },
   "devDependencies": {
     "@types/dotenv": "6.1.1",
     "@types/express": "4.17.1",
     "@types/faker": "4.1.6",
-    "@types/node": "12.11.1",
-    "@types/pg": "7.11.2",
+    "@types/jest": "24.0.19",
+    "@types/node": "12.11.5",
+    "@vadistic/eslint-config-node": "0.1.5",
+    "@vadistic/prettier-config": "0.1.4",
+    "eslint": "6.5.1",
     "faker": "4.1.0",
-    "knex": "0.19.5",
-    "pg": "7.12.1"
+    "jest": "24.9.0",
+    "prettier": "1.18.2",
+    "ts-jest": "24.1.0",
+    "ts-node": "8.4.1",
+    "tsc-watch": "4.0.0",
+    "typescript": "3.7.1-rc"
   },
   "engines": {
     "node": ">= 10.x"

@@ -2,6 +2,40 @@
   "name": "graphql-db-playground",
   "version": "0.1.0",
   "author": "Jakub Wadas <vadistic@gmail.com>",
+  "description": "Comparing few graphql server/db solutions",
   "private": true,
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://vadistic.netlify.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vadistic/graphql-db-playground"
+  },
+  "workspaces": [
+    "postgraphile",
+    "dgraph",
+    "faunadb",
+    "ormless",
+    "prisma",
+    "typeorm"
+  ],
+  "keywords": [
+    "postgraphile",
+    "dgraph",
+    "faunadb",
+    "ormless",
+    "prisma",
+    "typeorm"
+  ],
+  "devDependencies": {
+    "@vadistic/eslint-config-node": "0.1.7",
+    "@vadistic/prettier-config": "0.1.7",
+    "@vadistic/scripts": "0.1.7",
+    "eslint": "^6.6.0",
+    "jest": "^24.9.0",
+    "lerna": "^3.18.3",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.1.0",
+    "ts-node": "^8.4.1",
+    "typescript": "3.7.1-rc"
+  }
 }

@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  db:
+    container_name: db
+    restart: unless-stopped
+    build:
+      context: ./db
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - backend
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+
+networks:
+  backend:
+    name: backend
+
+volumes:
+  data:
